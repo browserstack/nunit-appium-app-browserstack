@@ -9,5 +9,3 @@ Code samples to get started with Appium tests for your Native App. Please feel f
 
 ## Resources
 * [Get Started guide](https://www.browserstack.com/app-automate/appium-nunit)
-* [Android sample code repo](https://github.com/browserstack/nunit-appium-app-browserstack/tree/master/android)
-* [IOS sample code repo](https://github.com/browserstack/nunit-appium-app-browserstack/tree/master/ios)
