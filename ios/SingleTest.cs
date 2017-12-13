@@ -30,10 +30,15 @@ namespace ios
             String matchedString = "";
             foreach (IOSElement textElement in textElements)
             {
-                String textContent = textElement.Text;
-                if (textContent.Contains("not registered"))
-                {
-                    matchedString = textContent;
+                try {
+                    String textContent = textElement.Text;
+                    if (textContent.Contains("not registered"))
+                    {
+                        matchedString = textContent;
+                    }
+                }
+                catch (NullReferenceException) {
+                    continue;
                 }
             }
 
