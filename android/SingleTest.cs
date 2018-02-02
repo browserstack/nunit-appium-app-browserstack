@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Support.UI;
 
@@ -16,7 +17,7 @@ namespace android
     [Test]
     public void searchWikipedia()
     {
-      AndroidElement searchElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("Search Wikipedia")));
+      AndroidElement searchElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Search Wikipedia")));
       searchElement.Click();
       AndroidElement insertTextElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("org.wikipedia.alpha:id/search_src_text")));
       insertTextElement.SendKeys("BrowserStack");
