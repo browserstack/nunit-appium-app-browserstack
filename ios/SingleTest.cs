@@ -14,35 +14,16 @@ namespace ios
         public SingleTest(string profile, string environment) : base(profile, environment) { }
 
         [Test]
-        public void loginTest()
+        public void textVerificationTest()
         {
-            IOSElement loginButton = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Log In")));
-            loginButton.Click();
+            IOSElement textButton = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Text Button")));
+            textButton.Click();
 
-            IOSElement emailTextField = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Email address")));
-            emailTextField.SendKeys("hello@browserstack.com");
+            IOSElement textInput = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Text Input")));
+            textInput.SendKeys("hello@browserstack.com"+"\n");
 
-            driver.FindElementByAccessibilityId("Next").Click();
-            Thread.Sleep(5000);
-
-            ReadOnlyCollection<IOSElement> textElements = driver.FindElementsByXPath("//XCUIElementTypeStaticText");
-            Assert.True(textElements.Count > 0);
-            String matchedString = "";
-            foreach (IOSElement textElement in textElements)
-            {
-                try {
-                    String textContent = textElement.Text;
-                    if (textContent.Contains("not registered"))
-                    {
-                        matchedString = textContent;
-                    }
-                }
-                catch (NullReferenceException) {
-                    continue;
-                }
-            }
-
-            Console.WriteLine(matchedString);
+            IOSElement textOutput = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Text Output")));
+            Assert.Equals(textOutput.Text,"hello@browserstack.com");
         }
     }
 }
