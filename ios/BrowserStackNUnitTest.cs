@@ -57,6 +57,12 @@ namespace ios
 			capability.SetCapability("browserstack.user", username);
 			capability.SetCapability("browserstack.key", accesskey);
 
+			String appId = Environment.GetEnvironmentVariable("BROWSERSTACK_APP_ID");
+			if (appId != null)
+			{
+				capability.SetCapability("app", appId);
+			}
+
 			if (capability.GetCapability("browserstack.local") != null && capability.GetCapability("browserstack.local").ToString() == "true")
 			{
 				browserStackLocal = new Local();
