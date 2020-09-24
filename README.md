@@ -20,7 +20,7 @@
 
 - Getting Started with Appium tests in NUnit on BrowserStack couldn't be easier!
 
-Note: The steps below are for Android with Appium DotNet Driver version 4, but the similar steps apply for any Appium Driver version and any OS in the repo.
+    - These steps below are for Android with Appium DotNet Driver version 4, but the similar steps apply for any Appium Driver version and any OS in the repo.
     - Open the Android Appium Dotnet Driver [Project file](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/android.csproj) in Visual Studio
     - Install all the Nuget packages in Visual Studio at the versions present in [packages config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/packages.config). This can be done from Projects > Manage NuGet Packages... > Browse tab > Select version from the botton right and click 'Add Package'
     - Add your Browserstack username and access key in the [`appSettings` tag in App.config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/App.config)
