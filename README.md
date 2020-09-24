@@ -20,14 +20,14 @@
 
 - Getting Started with Appium tests in NUnit on BrowserStack couldn't be easier!
 
-    - These steps below are for Android with Appium DotNet Driver version 4, but the similar steps apply for any Appium Driver version and any OS in the repo.
+    - These steps below are for Android with Appium DotNet Driver version 4, but similar steps apply for any Appium Driver version and any OS in the repo.
     - Open the Android Appium Dotnet Driver [Project file](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/android.csproj) in Visual Studio
-    - Install all the Nuget packages in Visual Studio at the versions present in [packages config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/packages.config). This can be done from Projects > Manage NuGet Packages... > Browse tab > Select version from the botton right and click 'Add Package'
-    - Add your Browserstack username and access key in the [`appSettings` tag in App.config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/App.config)
+    - Install all the Nuget packages in Visual Studio at the versions present in [packages config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/packages.config). This can be done from   `Projects > Manage NuGet Packages... > Browse tab > Select version` from the botton right and click 'Add Package'
+    - Add your Browserstack `username` and `access key` in the [`appSettings` tag in App.config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/App.config)
     - Add the url of the app uploaded to Browserstack in the [`first`, `local` and `parallel` tags in App.config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/App.config)
-    - Build the project using Build > Build Android
+    - Build the project using `Build > Build Android`
     - If you are running Local test on Mac or GNU/Linux, you will also have to run the local binary like this `./BrowserStackLocal --key <your access key>`
-    - To run the tests click View > Test to open Unit Tests panel and run any/all tests from there
+    - To run the tests click `View > Test` to open Unit Tests panel and run any/all tests from there
 
 ## Getting Help
 
