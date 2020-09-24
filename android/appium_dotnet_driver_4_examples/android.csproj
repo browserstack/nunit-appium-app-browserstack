@@ -47,9 +47,6 @@
     <Reference Include="BrowserStackLocal">
       <HintPath>packages\BrowserStackLocal.1.4.0\lib\net20\BrowserStackLocal.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.UITest">
-      <HintPath>packages\Xamarin.UITest.3.0.7\lib\net45\Xamarin.UITest.dll</HintPath>
-    </Reference>
     <Reference Include="SeleniumExtras.PageObjects">
       <HintPath>packages\DotNetSeleniumExtras.PageObjects.3.11.0\lib\net45\SeleniumExtras.PageObjects.dll</HintPath>
     </Reference>

@@ -46,9 +46,6 @@
     <Reference Include="BrowserStackLocal">
       <HintPath>packages\BrowserStackLocal.1.4.0\lib\net20\BrowserStackLocal.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.UITest">
-      <HintPath>packages\Xamarin.UITest.2.1.3\lib\net45\Xamarin.UITest.dll</HintPath>
-    </Reference>
     <Reference Include="appium-dotnet-driver">
       <HintPath>packages\Appium.WebDriver.3.0.0.2\lib\net45\appium-dotnet-driver.dll</HintPath>
     </Reference>

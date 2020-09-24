@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Configuration;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium;
-using BrowserStack;
 
 namespace android.parallel
 {
@@ -14,7 +13,6 @@ namespace android.parallel
 		protected AndroidDriver<AndroidElement> driver;
 		protected string profile;
 		protected string device;
-		private Local browserStackLocal;
 
 		public BrowserStackNUnitTest(string profile, string device)
 		{
@@ -60,16 +58,6 @@ namespace android.parallel
 			{
 				options.AddAdditionalCapability("app", appId);
 			}
-
-			if (options.ToCapabilities().HasCapability("browserstack.local") && options.ToCapabilities().HasCapability("browserstack.local").ToString() == "true")
-			{
-				browserStackLocal = new Local();
-				List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
-						new KeyValuePair<string, string>("key", accesskey)
-				};
-				browserStackLocal.start(bsLocalArgs);
-			}
-
 			Uri uri = new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/");
 			driver = new AndroidDriver<AndroidElement>(uri, options);
 		}
@@ -78,11 +66,6 @@ namespace android.parallel
 		public void Cleanup()
 		{
 			driver.Quit();
-			if (browserStackLocal != null)
-			{
-				browserStackLocal.stop();
-			}
 		}
-
 	}
 }
