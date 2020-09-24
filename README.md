@@ -27,7 +27,10 @@
     - Add the url of the app uploaded to Browserstack in the [`first`, `local` and `parallel` tags in App.config](https://github.com/gshah30/nunit-appium-app-browserstack/blob/master/android/appium_dotnet_driver_4_examples/App.config)
     - Build the project using `Build > Build Android`
     - If you are running Local test on Mac or GNU/Linux, you will also have to run the local binary like this `./BrowserStackLocal --key <your access key>`
+    - Update `App.config` file with your BrowserStack Username and Access Key(https://www.browserstack.com/accounts/settings)
+    - You can optionally export the environment variables for the Username and Access Key of your BrowserStack account
     - To run the tests click `View > Test` to open Unit Tests panel and run any/all tests from there
+    - You can view your test results on the [BrowserStack automate dashboard](https://www.browserstack.com/app-automate)
 
 ## Getting Help
 
