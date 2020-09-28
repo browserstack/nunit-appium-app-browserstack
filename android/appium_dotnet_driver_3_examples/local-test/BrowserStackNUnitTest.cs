@@ -72,7 +72,6 @@ namespace android.local
 				List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
 						new KeyValuePair<string, string>("key", accesskey)
 				};
-				bsLocalArgs.Add(new KeyValuePair<string, string>("logfile", "~/.browserstack/logs.txt"));
 				browserStackLocal.start(bsLocalArgs);
 			}
 
