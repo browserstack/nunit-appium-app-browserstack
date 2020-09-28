@@ -65,7 +65,7 @@ namespace ios.local
 
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
 					&& options.ToCapabilities().HasCapability("browserstack.local")
-					&& options.ToCapabilities().HasCapability("browserstack.local").ToString() == "true")
+					&& options.ToCapabilities().GetCapability("browserstack.local").ToString() == "true")
 			{
 				browserStackLocal = new Local();
 				List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
