@@ -16,7 +16,7 @@ This repository demonstrates how to run Appium tests in [NUnit](https://nunit.or
 
 Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be easier!
 
-### ** Run first test :**
+### **Run first test :**
 
 - Switch to `appium_dotnet_driver_4_examples`(or `appium_dotnet_driver_3_examples`) under `android` or `ios` directory
 
