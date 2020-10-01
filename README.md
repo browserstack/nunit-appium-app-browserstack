@@ -30,7 +30,7 @@ Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be e
 
 - Open the project in Visual Studio by opening `android.sln` or `ios.sln` file
 
-- Follow the steps outlined in the documentation - [Get Started with Parallel testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/parallelize-tests)
+- Follow the steps outlined in the documentation to run parallel tests - [Get Started with Parallel testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/parallelize-tests)
 
 ### **Use Local testing for apps that access resources hosted in development or testing environments :**
 
@@ -38,7 +38,7 @@ Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be e
 
 - Open the project in Visual Studio by opening `android.sln` or `ios.sln` file
 
-- Follow the steps outlined in the documentation - [Get Started with Local testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/local-testing)
+- Follow the steps outlined in the documentation to run local tests - [Get Started with Local testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/local-testing)
 
 **Note**: If you are running Local test on Mac, you need to download and run the BrowserStack Local binary before starting the test:
 
