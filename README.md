@@ -40,22 +40,22 @@ Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be e
 
 - Follow the steps outlined in the documentation - [Get Started with Local testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/local-testing)
 
-**Note**: If you are running Local test on Mac, you need to download the   steps:
+**Note**: If you are running Local test on Mac, you need to download and run the BrowserStack Local binary before starting the test:
 
  1. Download BrowserStack Local binary for mac: [OS X (10.7 and above)](https://www.browserstack.com/browserstack-local/BrowserStackLocal-darwin-x64.zip)
- 2. Run the binary using `./BrowserStackLocal --key <YOUR_ACCESS_KEY>` before the starting the test
+ 2. Switch to the directory where binary is downloaded and run using following command `./BrowserStackLocal --key <YOUR_ACCESS_KEY>`
 
 ## Integration with other CSharp frameworks
 
 For other CSharp frameworks samples, refer to following repositories :
 
-- [C# tests](https://github.com/browserstack/csharp-appium-app-browserstack)
+- [Appium CSharp tests](https://github.com/browserstack/csharp-appium-app-browserstack)
 
 Note: For other test frameworks supported by App-Automate refer our [Developer documentation](https://www.browserstack.com/docs/)
 
 ## Troubleshooting
 
-- In case `Unhandled Exception: System.IO.FileLoadException: Could not load file or assembly 'Newtonsoft.Json'` issue is encountered while running Android or iOS Local test on Windows, please follow the following steps to resolve it :
+- In case `Unhandled Exception: System.IO.FileLoadException: Could not load file or assembly 'Newtonsoft.Json'` issue is encountered while running a Local test on Windows, please follow the these steps to resolve it :
 
     - Go to Tools > NuGet Package Manager > Package Manager Console
 
