@@ -6,9 +6,9 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Support.UI;
 
-namespace android
+namespace android.local
 {
-    [TestFixture("local", "galaxy-s7")]
+    [TestFixture("local", "pixel-3")]
     public class LocalTest : BrowserStackNUnitTest
     {
         public LocalTest(string profile, string device) : base(profile,device){ }
@@ -16,9 +16,10 @@ namespace android
         [Test]
         public void testLocal()
         {
-            AndroidElement searchElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("com.example.android.basicnetworking:id/test_action")));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+            AndroidElement searchElement = (AndroidElement) wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.Id("com.example.android.basicnetworking:id/test_action")));
             searchElement.Click();
-            AndroidElement testElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.ClassName("android.widget.TextView")));
+            AndroidElement testElement = (AndroidElement) wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.ClassName("android.widget.TextView")));
 
             ReadOnlyCollection<AndroidElement> allTextViewElements = driver.FindElements(By.ClassName("android.widget.TextView"));
 

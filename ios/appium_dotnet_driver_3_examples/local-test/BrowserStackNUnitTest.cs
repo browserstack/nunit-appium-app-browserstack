@@ -4,22 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using OpenQA.Selenium.Appium.Android;
+using OpenQA.Selenium.Appium.iOS;
 using BrowserStack;
+using System.Runtime.InteropServices;
 
-namespace android
+namespace ios.local
 {
 	public class BrowserStackNUnitTest
 	{
-		protected AndroidDriver<AndroidElement> driver;
+		protected IOSDriver<IOSElement> driver;
 		protected string profile;
 		protected string device;
 		private Local browserStackLocal;
 
 		public BrowserStackNUnitTest(string profile, string device)
 		{
-				this.profile = profile;
-				this.device = device;
+			this.profile = profile;
+			this.device = device;
 		}
 
 		[SetUp]
@@ -31,7 +32,7 @@ namespace android
 			DesiredCapabilities capability = new DesiredCapabilities();
 
 			foreach (string key in caps.AllKeys)
-			{  
+			{
 				capability.SetCapability(key, caps[key]);
 			}
 
@@ -61,16 +62,18 @@ namespace android
 				capability.SetCapability("app", appId);
 			}
 
-			if (capability.GetCapability("browserstack.local") != null && capability.GetCapability("browserstack.local").ToString() == "true")
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+					&& capability.GetCapability("browserstack.local") != null
+					&& capability.GetCapability("browserstack.local").ToString() == "true")
 			{
 				browserStackLocal = new Local();
 				List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
-						new KeyValuePair<string, string>("key", accesskey)
+					new KeyValuePair<string, string>("key", accesskey)
 				};
 				browserStackLocal.start(bsLocalArgs);
 			}
 
-			driver = new AndroidDriver<AndroidElement>(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), capability);
+			driver = new IOSDriver<IOSElement>(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), capability);
 		}
 
 		[TearDown]

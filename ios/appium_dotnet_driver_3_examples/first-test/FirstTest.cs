@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Threading;
-using System.Collections.ObjectModel;
 using NUnit.Framework;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Support.UI;
 
-namespace ios
+namespace ios.first
 {
-    [TestFixture("single", "iphone-7")]
+    [TestFixture("first", "iphone-11-pro")]
     public class SingleTest : BrowserStackNUnitTest
     {
         public SingleTest(string profile, string environment) : base(profile, environment) { }
@@ -23,7 +21,7 @@ namespace ios
             textInput.SendKeys("hello@browserstack.com"+"\n");
 
             IOSElement textOutput = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Text Output")));
-            Assert.Equals(textOutput.Text,"hello@browserstack.com");
+            Assert.AreEqual(textOutput.Text,"hello@browserstack.com");
         }
     }
 }

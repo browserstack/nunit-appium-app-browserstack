@@ -5,9 +5,9 @@ using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Support.UI;
 
-namespace ios
+namespace ios.local
 {
-    [TestFixture("local", "iphone-7")]
+    [TestFixture("local", "iphone-11-pro")]
     public class LocalTest : BrowserStackNUnitTest
     {
         public LocalTest(string profile, string environment) : base(profile,environment){ }

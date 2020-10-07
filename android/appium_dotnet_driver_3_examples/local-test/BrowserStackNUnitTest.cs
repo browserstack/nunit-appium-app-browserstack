@@ -4,24 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
-using OpenQA.Selenium.Appium.iOS;
 using BrowserStack;
+using System.Runtime.InteropServices;
 
-namespace ios
+namespace android.local
 {
 	public class BrowserStackNUnitTest
 	{
-		protected IOSDriver<IOSElement> driver;
+		protected AndroidDriver<AndroidElement> driver;
 		protected string profile;
 		protected string device;
 		private Local browserStackLocal;
 
 		public BrowserStackNUnitTest(string profile, string device)
 		{
-			this.profile = profile;
-			this.device = device;
+				this.profile = profile;
+				this.device = device;
 		}
 
 		[SetUp]
@@ -33,7 +32,7 @@ namespace ios
 			DesiredCapabilities capability = new DesiredCapabilities();
 
 			foreach (string key in caps.AllKeys)
-			{
+			{  
 				capability.SetCapability(key, caps[key]);
 			}
 
@@ -63,16 +62,20 @@ namespace ios
 				capability.SetCapability("app", appId);
 			}
 
-			if (capability.GetCapability("browserstack.local") != null && capability.GetCapability("browserstack.local").ToString() == "true")
+			// if the platform is Windows, enable local testing fropm within the test
+			// for Mac and GNU/Linux, run the local binary manually to enable local testing (see the docs)
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+					&& capability.GetCapability("browserstack.local") != null
+					&& capability.GetCapability("browserstack.local").ToString() == "true")
 			{
 				browserStackLocal = new Local();
 				List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
-				new KeyValuePair<string, string>("key", accesskey)
-			};
+						new KeyValuePair<string, string>("key", accesskey)
+				};
 				browserStackLocal.start(bsLocalArgs);
 			}
 
-			driver = new IOSDriver<IOSElement>(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), capability);
+			driver = new AndroidDriver<AndroidElement>(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), capability);
 		}
 
 		[TearDown]

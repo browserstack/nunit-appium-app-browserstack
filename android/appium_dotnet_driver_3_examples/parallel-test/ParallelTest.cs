@@ -7,12 +7,14 @@ using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Support.UI;
 
-namespace android
+namespace android.parallel
 {
-  [TestFixture("single","galaxy-s6")]
-  public class SingleTest : BrowserStackNUnitTest
+  [TestFixture("parallel", "pixel-3")]
+  [TestFixture("parallel", "galaxy-s10e")]
+  [Parallelizable(ParallelScope.Fixtures)]
+  public class ParallelTest : BrowserStackNUnitTest
   {
-    public SingleTest(string profile, string device) : base(profile,device){}
+    public ParallelTest(string profile, string device) : base(profile,device){ }
 
     [Test]
     public void searchWikipedia()
@@ -20,7 +22,7 @@ namespace android
       AndroidElement searchElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Search Wikipedia")));
       searchElement.Click();
       AndroidElement insertTextElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("org.wikipedia.alpha:id/search_src_text")));
-      insertTextElement.SendKeys("BrowserStack");
+      insertTextElement.SendKeys("Browserstack");
       Thread.Sleep(5000);
 
       ReadOnlyCollection<AndroidElement> allProductsName = driver.FindElements(By.ClassName("android.widget.TextView"));
