@@ -18,32 +18,41 @@ Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be e
 
 ### **Run first test :**
 
-- Switch to `appium_dotnet_driver_4_examples`(or `appium_dotnet_driver_3_examples`) under `android` or `ios` directory
+- Go to `NUnit-Appium-App-BrowserStack` under `android` or `ios` directory
 
-- Open the project in Visual Studio by opening `android.sln` or `ios.sln` file
+- Open the project in Visual Studio by opening `NUnit-Appium-App-BrowserStack.sln` file
 
-- Follow the steps outlined in the documentation to run your first test - [Get Started with your first test on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit)
+- If you have uploaded your app then add the app id to the `browserstack.yml` config file, or you can directly specify the path to your app in the `browserstack.yml` file.
 
-### **Speed up test execution with parallel testing :**
+- Run `dotnet test --filter "Category=sample-test"`
 
-- Switch to `appium_dotnet_driver_4_examples`(or `appium_dotnet_driver_3_examples`) under `android` or `ios` directory
-
-- Open the project in Visual Studio by opening `android.sln` or `ios.sln` file
-
-- Follow the steps outlined in the documentation to run parallel tests - [Get Started with Parallel testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/parallelize-tests)
+- You can access the test execution results, and debugging information such as video recording, network logs on [App Automate dashboard](https://app-automate.browserstack.com/dashboard)
 
 ### **Use Local testing for apps that access resources hosted in development or testing environments :**
 
-- Switch to `appium_dotnet_driver_4_examples`(or `appium_dotnet_driver_3_examples`) under `android` or `ios` directory
+- Go to `NUnit-Appium-App-BrowserStack` under `android` or `ios` directory
 
-- Open the project in Visual Studio by opening `android.sln` or `ios.sln` file
+- Open the project in Visual Studio by opening `NUnit-Appium-App-BrowserStack.sln` file
 
-- Follow the steps outlined in the documentation to run local tests - [Get Started with Local testing on App Automate](https://www.browserstack.com/docs/app-automate/appium/getting-started/c-sharp/nunit/local-testing)
+- Ensure that `browserstackLocal` capability is set to `true` in the `browserstack.yml` file
 
-**Note**: If you are running Local test on Mac, you need to download and run the BrowserStack Local binary before starting the test:
+- If you have uploaded your app then add the app id to the `browserstack.yml` config file, or you can directly specify the path to your app in the `browserstack.yml` file.
 
- 1. Download BrowserStack Local binary for mac: [OS X (10.7 and above)](https://www.browserstack.com/browserstack-local/BrowserStackLocal-darwin-x64.zip)
- 2. Switch to the directory where binary is downloaded and run using following command `./BrowserStackLocal --key <YOUR_ACCESS_KEY>`
+- Run `dotnet test --filter "Category=sample-local-test"`
+
+- You can access the test execution results, and debugging information such as video recording, network logs on [App Automate dashboard](https://app-automate.browserstack.com/dashboard)
+
+### **Integrate your test suite**
+This repository uses the BrowserStack SDK to run tests on BrowserStack. Follow the steps below to install the SDK in your test suite and run tests on BrowserStack:
+
+- Create sample browserstack.yml file with the browserstack related capabilities with your BrowserStack Username and Access Key and place it in your root folder.
+- Add nuget library BrowserStack.TestAdapter
+```sh
+dotnet add BrowserStack.TestAdapter
+```
+- Build project dotnet build
+
+--
 
 ## Integration with other CSharp frameworks
 
@@ -52,6 +61,8 @@ For other CSharp frameworks samples, refer to following repositories :
 - [Appium CSharp tests](https://github.com/browserstack/csharp-appium-app-browserstack)
 
 Note: For other test frameworks supported by App-Automate refer our [Developer documentation](https://www.browserstack.com/docs/)
+
+--
 
 ## Troubleshooting
 
@@ -62,6 +73,8 @@ Note: For other test frameworks supported by App-Automate refer our [Developer d
     - Run the command `update-package Newtonsoft.Json -reinstall` in the opened console
 
     - Then run `update-package Newtonsoft.Json` in the same console
+
+--
 
 ## Getting Help
 
