@@ -14,17 +14,17 @@ namespace BrowserStack
 {
 	public class BrowserStackNUnitTest
 	{
-    protected IOSDriver<IOSElement> driver;
-    public BrowserStackNUnitTest() {}
+		protected IOSDriver<IOSElement> driver;
+		public BrowserStackNUnitTest() {}
 
 		[SetUp]
-    public void Init()
+		public void Init()
 		{
-      AppiumOptions appiumOptions = new AppiumOptions();
-      appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, "iPhone 14 Pro");
-      appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, "ios");
-      appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, "16");
-      driver = new IOSDriver<IOSElement>(new Uri("http://127.0.0.1:4723/wd/hub"), appiumOptions);
+			AppiumOptions appiumOptions = new AppiumOptions();
+			appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, "iPhone 14 Pro");
+			appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, "ios");
+			appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, "16");
+			driver = new IOSDriver<IOSElement>(new Uri("http://127.0.0.1:4723/wd/hub"), appiumOptions);
 		}
 
 		[TearDown]

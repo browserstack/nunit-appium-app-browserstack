@@ -18,12 +18,12 @@ namespace BrowserStack
 		public BrowserStackNUnitTest() {}
 
 		[SetUp]
-    public void Init()
+		public void Init()
 		{
 			AppiumOptions appiumOptions = new AppiumOptions();
 			appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, "Samsung Galaxy S20");
 			appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, "Android");
-      appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, "10");
+			appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, "10");
 			driver = new AndroidDriver<AndroidElement>(new Uri("http://127.0.0.1:4723/wd/hub"), appiumOptions);
 		}
 
