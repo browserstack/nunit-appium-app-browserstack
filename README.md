@@ -18,9 +18,9 @@ Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be e
 
 ### **Run first test :**
 
-- Go to `NUnit-Appium-App-BrowserStack` under `android` or `ios` directory
+- Open the project in Visual Studio by opening `nunit-appium-app-browserStack.sln` file
 
-- Open the project in Visual Studio by opening `NUnit-Appium-App-BrowserStack.sln` file
+- Go to `android` or `ios` directory
 
 - If you have uploaded your app then add the app id to the `browserstack.yml` config file, or you can directly specify the path to your app in the `browserstack.yml` file.
 
@@ -30,9 +30,9 @@ Getting Started with Appium tests in NUnit on BrowserStack devices couldn't be e
 
 ### **Use Local testing for apps that access resources hosted in development or testing environments :**
 
-- Go to `NUnit-Appium-App-BrowserStack` under `android` or `ios` directory
+- Open the project in Visual Studio by opening `nunit-appium-app-browserStack.sln` file
 
-- Open the project in Visual Studio by opening `NUnit-Appium-App-BrowserStack.sln` file
+- Go to `android` or `ios` directory
 
 - Ensure that `browserstackLocal` capability is set to `true` in the `browserstack.yml` file
 
