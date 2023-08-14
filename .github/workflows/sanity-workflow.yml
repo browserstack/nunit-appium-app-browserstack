@@ -63,7 +63,7 @@ jobs:
       - name: Run local android tests
         run: |
           cd android
-          dotnet test --filter "Category=sample-local-test"
+          dotnet test --filter "Category=sample-local-test" --browserstack.app "./LocalSample.apk"
 
       - name: Run sample ios tests
         run: |
@@ -73,7 +73,7 @@ jobs:
       - name: Run local ios tests
         run: |
           cd ios
-          dotnet test --filter "Category=sample-local-test"
+          dotnet test --filter "Category=sample-local-test" --browserstack.app "./LocalSample.ipa"
 
       - if: always()
         uses: actions/github-script@98814c53be79b1d30f795b907e553d8679345975
