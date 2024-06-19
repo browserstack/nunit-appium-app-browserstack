@@ -1,0 +1,6 @@
+.vs
+bin/
+obj
+*.err
+log/
+.DS_Store
