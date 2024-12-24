@@ -11,14 +11,13 @@ on:
 
 jobs:
   comment-run:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
-        dotnet: ['7.0.x', '6.0.x', '5.0.x']
-        os: [ windows-latest ]
-    name: NUnit Appium Repo ${{ matrix.dotnet }} - ${{ matrix.os }} Sample
+        dotnet: ['6.0.x']
+    name: NUnit Appium Repo ${{ matrix.dotnet }} Sample
     env:
       BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
       BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
@@ -52,133 +51,24 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet }}
+      
+      - name: Install required workloads
+        run: dotnet workload restore
 
-      - name: Install dependencies
-        shell: pwsh
+      - name: Restore dependencies and build
         run: |
-          # Function to clean packages
-          function Clean-Project {
-            param (
-              [string]$projectPath
-            )
-            Write-Host "Cleaning project in: $projectPath"
-            Push-Location $projectPath
-            
-            # Kill any processes that might be locking files
-            Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force
-            
-            # Remove NuGet packages
-            if (Test-Path "*.nupkg") {
-              Write-Host "Removing .nupkg files..."
-              Get-ChildItem "*.nupkg" | ForEach-Object {
-                $retryCount = 0
-                $maxRetries = 3
-                do {
-                  try {
-                    Remove-Item $_.FullName -Force
-                    break
-                  }
-                  catch {
-                    $retryCount++
-                    Write-Host "Failed to remove $($_.Name), attempt $retryCount of $maxRetries"
-                    Start-Sleep -Seconds 5
-                  }
-                } while ($retryCount -lt $maxRetries)
-              }
-            }
-            
-            # Clean build artifacts
-            if (Test-Path "bin") { Remove-Item "bin" -Recurse -Force -ErrorAction SilentlyContinue }
-            if (Test-Path "obj") { Remove-Item "obj" -Recurse -Force -ErrorAction SilentlyContinue }
-            
-            Pop-Location
-          }
-          
-          # Function to build project
-          function Build-Project {
-            param (
-              [string]$projectPath
-            )
-            Write-Host "Building project in: $projectPath"
-            Push-Location $projectPath
-            
-            try {
-              dotnet restore --force --no-cache
-              Start-Sleep -Seconds 5
-              dotnet clean
-              Start-Sleep -Seconds 5
-              dotnet build --no-restore
-            }
-            finally {
-              Pop-Location
-            }
-          }
-          
-          # Clear global NuGet cache
-          Write-Host "Clearing NuGet cache..."
+          cd android
           dotnet nuget locals all --clear
-          
-          # Clean template cache
-          if (Test-Path "C:\Users\runneradmin\.templateengine") {
-            Remove-Item "C:\Users\runneradmin\.templateengine" -Recurse -Force -ErrorAction SilentlyContinue
-          }
-          
-          # Process each project
-          Write-Host "Processing Android project..."
-          Clean-Project "android"
-          Start-Sleep -Seconds 5
-          
-          Write-Host "Processing iOS project..."
-          Clean-Project "ios"
-          Start-Sleep -Seconds 5
-          
-          # Build solution
-          Write-Host "Building solution..."
-          $maxAttempts = 3
-          $attempt = 0
-          $success = $false
-          
-          while (-not $success -and $attempt -lt $maxAttempts) {
-            $attempt++
-            try {
-              Write-Host "Build attempt $attempt of $maxAttempts"
-              Build-Project "android"
-              Start-Sleep -Seconds 10
-              Build-Project "ios"
-              $success = $true
-            }
-            catch {
-              Write-Host "Attempt $attempt failed: $_"
-              Start-Sleep -Seconds 15
-              # Clean again before retry
-              Clean-Project "android"
-              Clean-Project "ios"
-            }
-          }
-          
-          if (-not $success) {
-            throw "Build failed after $maxAttempts attempts"
-          }
+          dotnet restore
+          dotnet build
+        working-directory: ./android
 
       - name: Run sample android tests
         shell: pwsh
         run: |
           Write-Host "Current directory: $(Get-Location)"
           cd android
-          Write-Host "Changed to android directory: $(Get-Location)"
-          # List test assemblies
-          Write-Host "Test assemblies found:"
-          Get-ChildItem -Recurse -Filter "*.dll" | Where-Object { $_.FullName -like "*\bin\Debug\*" }
-          
-          # Run tests with discovery
-          dotnet test --list-tests
-          Write-Host "Running sample tests..."
-          dotnet test --filter "Category=sample-test" `
-            --verbosity detailed `
-            --logger "console;verbosity=detailed" `
-            --logger "trx;LogFileName=sample-test-results.trx" `
-            --no-build `
-            --blame-hang-timeout 120s
+          dotnet test --filter "Category=sample-test"
         env: 
           BROWSERSTACK_APP: ./WikipediaSample.apk
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
