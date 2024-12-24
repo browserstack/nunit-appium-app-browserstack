@@ -62,6 +62,11 @@ jobs:
           dotnet build
         working-directory: ./android
 
+      - name: List iOS tests
+        run: |
+          cd ios
+          dotnet test --list-tests --verbosity detailed
+          
       - name: Run sample android tests
         shell: pwsh
         run: |
