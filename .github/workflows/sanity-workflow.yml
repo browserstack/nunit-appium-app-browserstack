@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        dotnet: ['6.0.419']
+        dotnet: ['6.0.x']
     name: NUnit Appium Repo ${{ matrix.dotnet }} Sample
     env:
       BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
@@ -51,57 +51,32 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet }}
-      
-      - name: Install workload manifests
-        shell: pwsh
-        run: |
-          Write-Host "Installing .NET workloads..."
-          dotnet new --install Microsoft.NET.Workload.Android
-          dotnet workload install android
-          dotnet workload install maui-android
-          dotnet workload restore
-          Write-Host "Workloads installed successfully"
-      
-      - name: Install MAUI workload
-        run: |
-          dotnet nuget locals all --clear
-          dotnet tool install -g redth.net.maui.check
-          dotnet workload install maui --skip-manifest-update
-          dotnet workload install android --skip-manifest-update
-          dotnet workload list
-      
-      - name: Print dotnet info
-        run: |
-          dotnet --info
-          dotnet --version
 
-      - name: Restore dependencies and build
+      - name: Clear NuGet cache
+        run: dotnet nuget locals all --clear
+
+      - name: Install test adapters
+        run: |
+          dotnet add android/android.csproj package Microsoft.NET.Test.Sdk
+          dotnet add android/android.csproj package NUnit3TestAdapter
+
+      - name: Build and Test Android
         shell: pwsh
         run: |
           Write-Host "Current directory: $(Get-Location)"
           cd android
-          
-          Write-Host "Restoring dependencies..."
-          dotnet restore --verbosity detailed
-          
           Write-Host "Building project..."
-          dotnet msbuild -p:TargetFramework=net6.0-android -restore -t:Build -verbosity:detailed
-
-      - name: List android tests
-        run: |
-          cd android
-          dotnet test --list-tests --verbosity detailed
+          dotnet build --configuration Release
+          Write-Host "Running tests..."
+          dotnet test --no-build --configuration Release --verbosity normal
 
       - name: Run sample android tests
         shell: pwsh
         run: |
-          Write-Host "Current directory: $(Get-Location)"
           cd android
-          dotnet test --filter "Category=sample-test"
+          dotnet test --filter "Category=sample-test" --verbosity normal
         env: 
           BROWSERSTACK_APP: ./WikipediaSample.apk
-          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
 
       - name: Run local android tests
         shell: pwsh
