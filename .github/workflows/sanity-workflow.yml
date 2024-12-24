@@ -56,29 +56,84 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
-          Write-Host "Stopping any running dotnet processes..."
-          Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force
+          # Function to clean packages
+          function Clean-Project {
+            param (
+              [string]$projectPath
+            )
+            Write-Host "Cleaning project in: $projectPath"
+            Push-Location $projectPath
+            
+            # Kill any processes that might be locking files
+            Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force
+            
+            # Remove NuGet packages
+            if (Test-Path "*.nupkg") {
+              Write-Host "Removing .nupkg files..."
+              Get-ChildItem "*.nupkg" | ForEach-Object {
+                $retryCount = 0
+                $maxRetries = 3
+                do {
+                  try {
+                    Remove-Item $_.FullName -Force
+                    break
+                  }
+                  catch {
+                    $retryCount++
+                    Write-Host "Failed to remove $($_.Name), attempt $retryCount of $maxRetries"
+                    Start-Sleep -Seconds 5
+                  }
+                } while ($retryCount -lt $maxRetries)
+              }
+            }
+            
+            # Clean build artifacts
+            if (Test-Path "bin") { Remove-Item "bin" -Recurse -Force -ErrorAction SilentlyContinue }
+            if (Test-Path "obj") { Remove-Item "obj" -Recurse -Force -ErrorAction SilentlyContinue }
+            
+            Pop-Location
+          }
           
-          Write-Host "Clearing template cache..."
+          # Function to build project
+          function Build-Project {
+            param (
+              [string]$projectPath
+            )
+            Write-Host "Building project in: $projectPath"
+            Push-Location $projectPath
+            
+            try {
+              dotnet restore --force --no-cache
+              Start-Sleep -Seconds 5
+              dotnet clean
+              Start-Sleep -Seconds 5
+              dotnet build --no-restore
+            }
+            finally {
+              Pop-Location
+            }
+          }
+          
+          # Clear global NuGet cache
+          Write-Host "Clearing NuGet cache..."
+          dotnet nuget locals all --clear
+          
+          # Clean template cache
           if (Test-Path "C:\Users\runneradmin\.templateengine") {
             Remove-Item "C:\Users\runneradmin\.templateengine" -Recurse -Force -ErrorAction SilentlyContinue
           }
           
-          Write-Host "Clearing NuGet caches and packages..."
-          dotnet nuget locals all --clear
-          if (Test-Path "*.nupkg") {
-            Start-Sleep -Seconds 5  # Wait for file release
-            Remove-Item "*.nupkg" -Force -ErrorAction SilentlyContinue
-          }
+          # Process each project
+          Write-Host "Processing Android project..."
+          Clean-Project "android"
+          Start-Sleep -Seconds 5
           
-          Write-Host "Removing lock files..."
-          if (Test-Path "build.lock") {
-            Remove-Item "build.lock" -Force -ErrorAction SilentlyContinue
-          }
+          Write-Host "Processing iOS project..."
+          Clean-Project "ios"
+          Start-Sleep -Seconds 5
           
-          Write-Host "Cleaning build artifacts..."
-          Get-ChildItem -Include bin,obj -Recurse | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-          
+          # Build solution
+          Write-Host "Building solution..."
           $maxAttempts = 3
           $attempt = 0
           $success = $false
@@ -87,29 +142,24 @@ jobs:
             $attempt++
             try {
               Write-Host "Build attempt $attempt of $maxAttempts"
-              
-              Write-Host "Restoring dependencies..."
-              dotnet restore --force --no-cache
-              Start-Sleep -Seconds 5  # Wait between operations
-              
-              Write-Host "Cleaning solution..."
-              dotnet clean
-              Start-Sleep -Seconds 5  # Wait between operations
-              
-              Write-Host "Building solution..."
-              dotnet build
+              Build-Project "android"
+              Start-Sleep -Seconds 10
+              Build-Project "ios"
               $success = $true
             }
             catch {
               Write-Host "Attempt $attempt failed: $_"
-              Start-Sleep -Seconds 10  # Wait before retry
+              Start-Sleep -Seconds 15
+              # Clean again before retry
+              Clean-Project "android"
+              Clean-Project "ios"
             }
           }
           
           if (-not $success) {
             throw "Build failed after $maxAttempts attempts"
           }
-
+          
       - name: Run sample android tests
         shell: pwsh
         run: |
