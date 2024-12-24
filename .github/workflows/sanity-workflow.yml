@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        dotnet: ['6.0.x']
+        dotnet: ['6.0.417']
     name: NUnit Appium Repo ${{ matrix.dotnet }} Sample
     env:
       BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
@@ -52,15 +52,31 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       
-      - name: Install required workloads
-        run: dotnet workload restore
+      - name: Install workload manifests
+        shell: pwsh
+        run: |
+          Write-Host "Installing .NET workloads..."
+          dotnet new --install Microsoft.NET.Workload.Android
+          dotnet workload install android
+          dotnet workload install maui-android
+          dotnet workload restore
+          Write-Host "Workloads installed successfully"
 
       - name: Restore dependencies and build
+        shell: pwsh
         run: |
+          Write-Host "Current directory: $(Get-Location)"
+          cd android
+          Write-Host "Changed to android directory: $(Get-Location)"
+          
+          Write-Host "Clearing NuGet cache..."
           dotnet nuget locals all --clear
-          dotnet restore
-          dotnet build
-        working-directory: ./android
+          
+          Write-Host "Restoring dependencies..."
+          dotnet restore --verbosity detailed
+          
+          Write-Host "Building project..."
+          dotnet build --no-restore --verbosity detailed
 
       - name: List android tests
         run: |
