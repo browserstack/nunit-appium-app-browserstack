@@ -159,13 +159,30 @@ jobs:
           if (-not $success) {
             throw "Build failed after $maxAttempts attempts"
           }
-          
+
       - name: Run sample android tests
         shell: pwsh
         run: |
-          Start-Sleep -Seconds 5  # Prevent file access conflicts
+          Write-Host "Current directory: $(Get-Location)"
           cd android
-          dotnet test --filter "Category=sample-test"
+          Write-Host "Changed to android directory: $(Get-Location)"
+          # List test assemblies
+          Write-Host "Test assemblies found:"
+          Get-ChildItem -Recurse -Filter "*.dll" | Where-Object { $_.FullName -like "*\bin\Debug\*" }
+          
+          # Run tests with discovery
+          dotnet test --list-tests
+          Write-Host "Running sample tests..."
+          dotnet test --filter "Category=sample-test" `
+            --verbosity detailed `
+            --logger "console;verbosity=detailed" `
+            --logger "trx;LogFileName=sample-test-results.trx" `
+            --no-build `
+            --blame-hang-timeout 120s
+        env: 
+          BROWSERSTACK_APP: ./WikipediaSample.apk
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
 
       - name: Run local android tests
         shell: pwsh
