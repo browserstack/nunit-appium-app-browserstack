@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 1
       matrix:
         dotnet: ['7.0.x', '6.0.x', '5.0.x']
         os: [ windows-latest ]
