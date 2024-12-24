@@ -53,27 +53,47 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       - name: Install dependencies
-        run: dotnet build
+        shell: pwsh
+        run: |
+          dotnet nuget locals all --clear
+          if (Test-Path "*.nupkg") {
+            Remove-Item "*.nupkg" -Force
+          }
+          if (Test-Path "build.lock") {
+            Remove-Item "build.lock" -Force
+          }
+          Get-ChildItem -Include bin,obj -Recurse | Remove-Item -Recurse -Force
+          dotnet restore --force --no-cache
+          dotnet clean
+          dotnet build
 
       - name: Run sample android tests
+        shell: pwsh
         run: |
+          Start-Sleep -Seconds 5
           cd android
           dotnet test --filter "Category=sample-test"
 
       - name: Run local android tests
+        shell: pwsh
         run: |
+          Start-Sleep -Seconds 5
           cd android
           dotnet test --filter "Category=sample-local-test"
         env: 
           BROWSERSTACK_APP: ./LocalSample.apk
 
       - name: Run sample ios tests
+        shell: pwsh
         run: |
+          Start-Sleep -Seconds 5
           cd ios
           dotnet test --filter "Category=sample-test"
 
       - name: Run local ios tests
+        shell: pwsh
         run: |
+          Start-Sleep -Seconds 5
           cd ios
           dotnet test --filter "Category=sample-local-test"
         env: 
