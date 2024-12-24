@@ -1,6 +1,5 @@
 # This job is to test different profiles in sdk branch against full commit id
 # This workflow targets nunit
-
 name: C-sharp SDK Test workflow on workflow_dispatch
 
 on:
@@ -28,6 +27,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.commit_sha }}
+
       - uses: actions/github-script@98814c53be79b1d30f795b907e553d8679345975
         id: status-check-in-progress
         env:
@@ -47,6 +47,7 @@ jobs:
             if (result.status !== 201) {
               console.log('Failed to create check run')
             }
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
@@ -55,29 +56,71 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
+          Write-Host "Stopping any running dotnet processes..."
+          Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force
+          
+          Write-Host "Clearing template cache..."
+          if (Test-Path "C:\Users\runneradmin\.templateengine") {
+            Remove-Item "C:\Users\runneradmin\.templateengine" -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          
+          Write-Host "Clearing NuGet caches and packages..."
           dotnet nuget locals all --clear
           if (Test-Path "*.nupkg") {
-            Remove-Item "*.nupkg" -Force
+            Start-Sleep -Seconds 5  # Wait for file release
+            Remove-Item "*.nupkg" -Force -ErrorAction SilentlyContinue
           }
+          
+          Write-Host "Removing lock files..."
           if (Test-Path "build.lock") {
-            Remove-Item "build.lock" -Force
+            Remove-Item "build.lock" -Force -ErrorAction SilentlyContinue
           }
-          Get-ChildItem -Include bin,obj -Recurse | Remove-Item -Recurse -Force
-          dotnet restore --force --no-cache
-          dotnet clean
-          dotnet build
+          
+          Write-Host "Cleaning build artifacts..."
+          Get-ChildItem -Include bin,obj -Recurse | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          
+          $maxAttempts = 3
+          $attempt = 0
+          $success = $false
+          
+          while (-not $success -and $attempt -lt $maxAttempts) {
+            $attempt++
+            try {
+              Write-Host "Build attempt $attempt of $maxAttempts"
+              
+              Write-Host "Restoring dependencies..."
+              dotnet restore --force --no-cache
+              Start-Sleep -Seconds 5  # Wait between operations
+              
+              Write-Host "Cleaning solution..."
+              dotnet clean
+              Start-Sleep -Seconds 5  # Wait between operations
+              
+              Write-Host "Building solution..."
+              dotnet build
+              $success = $true
+            }
+            catch {
+              Write-Host "Attempt $attempt failed: $_"
+              Start-Sleep -Seconds 10  # Wait before retry
+            }
+          }
+          
+          if (-not $success) {
+            throw "Build failed after $maxAttempts attempts"
+          }
 
       - name: Run sample android tests
         shell: pwsh
         run: |
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd android
           dotnet test --filter "Category=sample-test"
 
       - name: Run local android tests
         shell: pwsh
         run: |
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd android
           dotnet test --filter "Category=sample-local-test"
         env: 
@@ -86,14 +129,14 @@ jobs:
       - name: Run sample ios tests
         shell: pwsh
         run: |
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd ios
           dotnet test --filter "Category=sample-test"
 
       - name: Run local ios tests
         shell: pwsh
         run: |
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd ios
           dotnet test --filter "Category=sample-local-test"
         env: 
