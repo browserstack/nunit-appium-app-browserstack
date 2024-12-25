@@ -53,36 +53,37 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: false
       
+      - name: Setup BrowserStack
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install BrowserStack.TestAdapter.Dotnet.Tool
+          dotnet tool restore
+      
       - name: Install .NET workloads
         run: |
           dotnet workload install android
           dotnet workload install ios
 
-      - name: Clear NuGet cache
-        run: dotnet nuget locals all --clear
-      
-      - name: Restore dependencies
+      - name: Clear NuGet cache and restore
         run: |
+          dotnet nuget locals all --clear
           cd android
           dotnet restore --verbosity detailed
-
-      - name: Build and Test Android
-        shell: pwsh
+      
+      - name: Build project
         run: |
-          Write-Host "Current directory: $(Get-Location)"
           cd android
-          Write-Host "Building project..."
           dotnet build --configuration Release
-          Write-Host "Running tests..."
-          dotnet test --no-build --configuration Release --verbosity normal
 
-      - name: Run sample android tests
+      - name: Run tests with detailed logging
         shell: pwsh
         run: |
           cd android
-          dotnet test --filter "Category=sample-test" --verbosity normal
-        env: 
+          dotnet test --no-build --configuration Release --verbosity detailed --logger "console;verbosity=detailed" --filter "Category=sample-test"
+        env:
           BROWSERSTACK_APP: ./WikipediaSample.apk
+          BROWSERSTACK_TEST_ROOT: ${{ github.workspace }}/android
+          VSTest_Debug: 1
 
       - name: Run local android tests
         shell: pwsh
