@@ -50,7 +50,13 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: ${{ matrix.dotnet }}
+          dotnet-version: '6.0.x'
+          include-prerelease: false
+      
+      - name: Install .NET workloads
+        run: |
+          dotnet workload install android
+          dotnet workload install ios
 
       - name: Clear NuGet cache
         run: dotnet nuget locals all --clear
@@ -58,14 +64,7 @@ jobs:
       - name: Restore dependencies
         run: |
           cd android
-          dotnet restore
-
-      - name: Install test adapters
-        run: |
-          dotnet add android/android.csproj package Microsoft.NET.Test.Sdk
-          dotnet add android/android.csproj package NUnit
-          dotnet add android/android.csproj package NUnit3TestAdapter
-          dotnet add android/android.csproj package Microsoft.TestPlatform.TestHost
+          dotnet restore --verbosity detailed
 
       - name: Build and Test Android
         shell: pwsh
@@ -75,7 +74,7 @@ jobs:
           Write-Host "Building project..."
           dotnet build --configuration Release
           Write-Host "Running tests..."
-          dotnet test --no-build --configuration Release --verbosity diagnostic
+          dotnet test --no-build --configuration Release --verbosity normal
 
       - name: Run sample android tests
         shell: pwsh
