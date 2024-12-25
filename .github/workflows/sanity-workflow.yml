@@ -65,7 +65,7 @@ jobs:
           cd android
           dotnet restore
           dotnet build --configuration Release
-          dotnet test --no-build --configuration Release --verbosity detailed --logger "console;verbosity=detailed" --filter "Category=sample-test" --blame-crash
+          dotnet test --diag:log.txt --no-build --configuration Release --verbosity detailed
 
       - name: Run local android tests
         shell: pwsh
