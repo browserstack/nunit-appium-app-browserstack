@@ -54,11 +54,18 @@ jobs:
 
       - name: Clear NuGet cache
         run: dotnet nuget locals all --clear
+      
+      - name: Restore dependencies
+        run: |
+          cd android
+          dotnet restore
 
       - name: Install test adapters
         run: |
           dotnet add android/android.csproj package Microsoft.NET.Test.Sdk
+          dotnet add android/android.csproj package NUnit
           dotnet add android/android.csproj package NUnit3TestAdapter
+          dotnet add android/android.csproj package Microsoft.TestPlatform.TestHost
 
       - name: Build and Test Android
         shell: pwsh
@@ -68,7 +75,7 @@ jobs:
           Write-Host "Building project..."
           dotnet build --configuration Release
           Write-Host "Running tests..."
-          dotnet test --no-build --configuration Release --verbosity normal
+          dotnet test --no-build --configuration Release --verbosity diagnostic
 
       - name: Run sample android tests
         shell: pwsh
