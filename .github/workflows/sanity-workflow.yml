@@ -100,11 +100,9 @@ jobs:
           cd android
           $env:MSBUILDSINGLELOADCONTEXT = 1
           dotnet build --configuration Release
-          dotnet test --no-build --configuration Release --verbosity detailed `
+          dotnet test --verbosity detailed `
             --logger "console;verbosity=detailed" `
             --filter "Category=sample-test" `
-            --blame-crash-dump-type full `
-            --diag:test_log.txt
 
       - name: Run local android tests
         shell: pwsh
