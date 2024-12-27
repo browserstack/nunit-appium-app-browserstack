@@ -54,6 +54,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd android
           dotnet new globaljson --sdk-version ${{ steps.dotnetsetup.outputs.dotnet-version }}
           dotnet --version
           dotnet build
