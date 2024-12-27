@@ -49,13 +49,15 @@ jobs:
             }
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
+        id: dotnetsetup
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
       - name: Install dependencies
         run: |
-          cd android
           dotnet new globaljson --sdk-version ${{ steps.dotnetsetup.outputs.dotnet-version }}
+          dotnet --version
+          cd android
           dotnet --version
           dotnet build
 
