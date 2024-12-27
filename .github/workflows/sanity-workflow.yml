@@ -1,5 +1,6 @@
 # This job is to test different profiles in sdk branch against full commit id
 # This workflow targets nunit
+
 name: C-sharp SDK Test workflow on workflow_dispatch
 
 on:
@@ -11,63 +12,22 @@ on:
 
 jobs:
   comment-run:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 3
       matrix:
-        dotnet: ['6.0.408']
-    name: NUnit Appium Repo ${{ matrix.dotnet }} Sample
+        dotnet: ['7.0.x', '6.0.x', '5.0.x']
+        os: [ windows-latest ]
+    name: NUnit Appium Repo ${{ matrix.dotnet }} - ${{ matrix.os }} Sample
     env:
       BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
       BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
-      BROWSERSTACK_TEST_ROOT: ${{ github.workspace }}/android
 
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.commit_sha }}
-      
-      - name: Remove existing .NET SDKs
-        run: |
-          Remove-Item -Path "C:\Program Files\dotnet\sdk\9.*" -Recurse -Force -ErrorAction SilentlyContinue
-          Remove-Item -Path "C:\Program Files\dotnet\sdk\8.*" -Recurse -Force -ErrorAction SilentlyContinue
-          Remove-Item -Path "C:\Program Files\dotnet\sdk\7.*" -Recurse -Force -ErrorAction SilentlyContinue
-
-      - name: Clean existing .NET installations
-        shell: pwsh
-        run: |
-          Get-ChildItem -Path "C:\Program Files\dotnet\sdk-manifests" -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse
-          Get-ChildItem -Path "C:\Program Files\dotnet\sdk" -Directory | Where-Object { $_.Name -notmatch '^6\.0\.' } | Remove-Item -Force -Recurse
-
-      - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '6.0.408'
-          include-prerelease: false
-      
-      - name: Install .NET workloads
-        shell: pwsh
-        run: |
-          dotnet workload install android ios maui --skip-manifest-update
-          dotnet workload repair
-
-      - name: Verify .NET setup
-        run: |
-          dotnet --info
-          dotnet workload list
-
-      - name: Verify .NET version
-        run: |
-          dotnet --version
-          dotnet --list-sdks
-
-      - name: Clear NuGet cache
-        run: |
-          dotnet nuget locals all --clear
-          cd android
-          dotnet restore --verbosity detailed
-
       - uses: actions/github-script@98814c53be79b1d30f795b907e553d8679345975
         id: status-check-in-progress
         env:
@@ -87,43 +47,36 @@ jobs:
             if (result.status !== 201) {
               console.log('Failed to create check run')
             }
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
 
-      - name: Setup BrowserStack
+      - name: Install dependencies
         run: |
-          dotnet new tool-manifest --force
-          dotnet tool install BrowserStack.TestAdapter.Dotnet.Tool
-          dotnet tool restore
-      
-      - name: Run tests
-        shell: pwsh
+          dotnet new globaljson --sdk-version ${{ steps.dotnetsetup.outputs.dotnet-version }}
+          dotnet --version
+          dotnet build
+
+      - name: Run sample android tests
         run: |
           cd android
-          $env:MSBUILDSINGLELOADCONTEXT = 1
-          dotnet build --configuration Release
-          dotnet test --verbosity detailed `
-            --logger "console;verbosity=detailed" `
-            --filter "Category=sample-test" `
+          dotnet test --filter "Category=sample-test"
 
       - name: Run local android tests
-        shell: pwsh
         run: |
-          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd android
           dotnet test --filter "Category=sample-local-test"
         env: 
           BROWSERSTACK_APP: ./LocalSample.apk
 
       - name: Run sample ios tests
-        shell: pwsh
         run: |
-          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd ios
           dotnet test --filter "Category=sample-test"
 
       - name: Run local ios tests
-        shell: pwsh
         run: |
-          Start-Sleep -Seconds 5  # Prevent file access conflicts
           cd ios
           dotnet test --filter "Category=sample-local-test"
         env: 
