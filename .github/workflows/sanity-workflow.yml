@@ -65,6 +65,8 @@ jobs:
         run: |
           cd android
           dotnet test --filter "Category=sample-test"
+        env: 
+          BROWSERSTACK_APP: ./WikipediaSample.apk
 
       - name: Run local android tests
         run: |
