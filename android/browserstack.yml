@@ -3,15 +3,15 @@
 # =============================
 # Add your BrowserStack userName and acccessKey here or set BROWSERSTACK_USERNAME and
 # BROWSERSTACK_ACCESS_KEY as env variables
-userName: BROWSERSTACK_USERNAME
-accessKey: BROWSERSTACK_ACCESS_KEY
+userName: rounakbhatia_4cuKDH
+accessKey: qxYaY6dHXzYkWtRNyv8d
 
 # ======================
 # BrowserStack Reporting
 # ======================
 # The following capabilities are used to set up reporting on BrowserStack:
 # Set 'projectName' to the name of your project. Example, Marketing Website
-projectName: BrowserStack Samples
+projectName: nunit-appium-rounak
 # Set `buildName` as the name of the job / testsuite being run
 buildName: browserstack build
 # `buildIdentifier` is a unique id to differentiate every execution that gets appended to
@@ -19,7 +19,7 @@ buildName: browserstack build
 # ${BUILD_NUMBER} (Default): Generates an incremental counter with every execution
 # ${DATE_TIME}: Generates a Timestamp with every execution. Eg. 05-Nov-19:30
 # Read more about buildIdentifiers here -> https://www.browserstack.com/docs/automate/selenium/organize-tests
-buildIdentifier: '#${BUILD_NUMBER}' # Supports strings along with either/both ${expression}
+buildIdentifier: '#${DATE_TIME}' # Supports strings along with either/both ${expression}
 
 source: 'nunit:appium-sample-sdk:v1.0'
 
@@ -38,12 +38,12 @@ platforms:
   - deviceName: Samsung Galaxy S22 Ultra
     osVersion: 12.0
     platformName: android
-  - deviceName: Samsung Galaxy S21
-    osVersion: 11.0
-    platformName: android
-  - deviceName: Google Pixel 6 Pro
-    osVersion: 12.0
-    platformName: android
+  # - deviceName: Samsung Galaxy S21
+  #   osVersion: 11.0
+  #   platformName: android
+  # - deviceName: Google Pixel 6 Pro
+  #   osVersion: 12.0
+  #   platformName: android
 
 # ==========================================
 # BrowserStack Local
@@ -65,3 +65,6 @@ debug: false # <boolean> # Set to true if you need screenshots for every seleniu
 networkLogs: false # <boolean> Set to true to enable HAR logs capturing
 consoleLogs: errors # <string> Remote browser's console debug levels to be printed (Default: errors)
 # Available options are `disable`, `errors`, `warnings`, `info`, `verbose` (Default: errors)
+logLevel: debug
+percy: false
+accessibility: false
