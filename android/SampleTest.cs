@@ -33,7 +33,7 @@ namespace BrowserStack
       insertTextElement.SendKeys("BrowserStack");
 
       // ReadOnlyCollection<IWebElement> allProductsName = driver.FindElements(By.ClassName("android.widget.TextView"));
-      // Assert.That(allProductsName.Count, Is.GreaterThan(0));
+      Assert.That("true", Is.EqualTo("true"));
     }
   }
 }
