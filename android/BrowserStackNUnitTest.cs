@@ -26,10 +26,10 @@ namespace BrowserStack
             {
                 var appiumOptions = new AppiumOptions();
                 
-                // Set required capabilities
-                appiumOptions.DeviceName = "Samsung Galaxy S20";  // Use the DeviceName property
-                appiumOptions.PlatformName = "Android";           // Use the PlatformName property
-				appiumOptions.PlatformVersion = "10";
+                // // Set required capabilities
+                // appiumOptions.DeviceName = "Samsung Galaxy S20";  // Use the DeviceName property
+                // appiumOptions.PlatformName = "Android";           // Use the PlatformName property
+				// appiumOptions.PlatformVersion = "10";
                 
                 // Initialize the driver
                 driver = new AndroidDriver(
