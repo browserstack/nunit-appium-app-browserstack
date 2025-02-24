@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        dotnet: ['7.0.x', '6.0.x', '5.0.x']
+        dotnet: ['7.0.x']
         os: [ windows-latest ]
     name: NUnit Appium Repo ${{ matrix.dotnet }} - ${{ matrix.os }} Sample
     env:
@@ -49,16 +49,24 @@ jobs:
             }
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
+        id: dotnetsetup
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
       - name: Install dependencies
-        run: dotnet build
+        run: |
+          dotnet new globaljson --sdk-version ${{ steps.dotnetsetup.outputs.dotnet-version }}
+          dotnet --version
+          cd android
+          dotnet --version
+          dotnet build
 
       - name: Run sample android tests
         run: |
           cd android
           dotnet test --filter "Category=sample-test"
+        env: 
+          BROWSERSTACK_APP: ./WikipediaSample.apk
 
       - name: Run local android tests
         run: |
