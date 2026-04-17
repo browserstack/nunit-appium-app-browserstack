@@ -16,8 +16,19 @@ jobs:
     strategy:
       fail-fast: false
       max-parallel: 3
+      # .net5 runner doesn't installed at runtime, so skipping it and adding other .net latest versions.
+      # added target-framework in matrix to avoid runtime errors as each runner has only its matching runtime installed.
       matrix:
-        dotnet: ['7.0.x', '6.0.x', '5.0.x']
+        dotnet: ['6.0.x', '8.0.x', '9.0.x', '10.0.x']
+        include:
+          - dotnet: '6.0.x'
+            target-framework: 'net6.0'
+          - dotnet: '8.0.x'
+            target-framework: 'net8.0'
+          - dotnet: '9.0.x'
+            target-framework: 'net9.0'
+          - dotnet: '10.0.x'
+            target-framework: 'net10.0'
         os: [ windows-latest ]
     name: NUnit Appium Repo ${{ matrix.dotnet }} - ${{ matrix.os }} Sample
     env:
@@ -52,30 +63,27 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
-      - name: Install dependencies
-        run: dotnet build
-
       - name: Run sample android tests
         run: |
           cd android
-          dotnet test --filter "Category=sample-test"
+          dotnet test --filter "Category=sample-test" --framework ${{ matrix.target-framework }}
 
       - name: Run local android tests
         run: |
           cd android
-          dotnet test --filter "Category=sample-local-test"
+          dotnet test --filter "Category=sample-local-test" --framework ${{ matrix.target-framework }}
         env: 
           BROWSERSTACK_APP: ./LocalSample.apk
 
       - name: Run sample ios tests
         run: |
           cd ios
-          dotnet test --filter "Category=sample-test"
+          dotnet test --filter "Category=sample-test" --framework ${{ matrix.target-framework }}
 
       - name: Run local ios tests
         run: |
           cd ios
-          dotnet test --filter "Category=sample-local-test"
+          dotnet test --filter "Category=sample-local-test" --framework ${{ matrix.target-framework }}
         env: 
           BROWSERSTACK_APP: ./LocalSample.ipa
 
